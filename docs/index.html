@@ -49,19 +49,20 @@ div.container {
  <div class="container">
 <p>Proficional De Auto Performance</p>
   </div>
-</div>
-<script>
+</div><script>
     async function fetchData() {
-        const response = await fetch('https://spreadsheets.google.com/feeds/list/16iS20GXxOqQiSIk3vmaWBYL_air1xT1zeAzIjlqyiSU/od6/public/values?alt=json');
+        const response = await fetch('https://spreadsheets.google.com/feeds/list/16iS20GXxOqQiSIk3vmaWBYL_air1xT1zeAzIjlqyiSU/1416026108/public/values?alt=json');
         const data = await response.json();
         const entries = data.feed.entry;
 
-        const labels = entries.map(entry => entry.gsx$nome.$t);
-        const values = entries.map(entry => parseFloat(entry.gsx$valor.$t));
+        // Mapeia as colunas "nome" (A) e "valor" (B)
+        const labels = entries.slice(1).map(entry => entry.gsx$nome.$t); // Ignora a primeira linha de dados
+        const values = entries.slice(1).map(entry => parseFloat(entry.gsx$valor.$t)); // Ignora a primeira linha de dados
 
         return { labels, values };
     }
-async function createChart() {
+
+    async function createChart() {
         const data = await fetchData();
         const ctx = document.getElementById('myChart').getContext('2d');
         new Chart(ctx, {
