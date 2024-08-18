@@ -58,8 +58,8 @@ async function fetchData() {
         const entries = data.values;
         alert("Dados processados!");
 
-        const labels = entries.map(row => row[0]);
-        const values = entries.map(row => parseFloat(row[1]));
+        const labels = entries.map(row => row[0] || ''); // Garantir que não há valores nulos
+        const values = entries.map(row => parseFloat(row[1]) || 0); // Garantir que não há valores nulos
 
         alert("Labels e values extraídos!");
 
@@ -89,8 +89,32 @@ async function createChart() {
                 }]
             },
             options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                            }
+                        }
+                    }
+                },
                 scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Nome'
+                        }
+                    },
                     y: {
+                        title: {
+                            display: true,
+                            text: 'Valor'
+                        },
                         beginAtZero: true
                     }
                 }
