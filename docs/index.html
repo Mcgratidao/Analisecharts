@@ -56,10 +56,16 @@ async function fetchData() {
         alert("Dados convertidos para JSON!");
 
         const entries = data.values;
-        alert("Dados processados!");
+        if (!entries || entries.length === 0) {
+            throw new Error("Nenhum dado encontrado.");
+        }
 
         const labels = entries.map(row => row[0] || ''); // Garantir que não há valores nulos
         const values = entries.map(row => parseFloat(row[1]) || 0); // Garantir que não há valores nulos
+
+        if (labels.length === 0 || values.length === 0) {
+            throw new Error("Dados insuficientes para criar o gráfico.");
+        }
 
         alert("Labels e values extraídos!");
 
@@ -108,6 +114,9 @@ async function createChart() {
                         title: {
                             display: true,
                             text: 'Nome'
+                        },
+                        ticks: {
+                            autoSkip: false // Mostrar todos os rótulos no eixo x
                         }
                     },
                     y: {
