@@ -7,60 +7,44 @@
     <title>Gráficos e animações</title>
     <style>
         .game-board {
-            padding: 10px, 10px, 10px, 10px;
+            display: flex;
+            flex-direction: row;
             width: 80%;
             height: 800px;
             border: 1px solid rgb(35, 100, 35);
             margin: 0 auto;
+            background: linear-gradient(#0f3b29, #E0F6FF);
             position: relative;
             overflow: hidden;
-            background: linear-gradient(#0f3b29, #E0F6FF);
         }
-        .polaroid-cont, .polaroid {
-            position: relative;
-            margin-left: auto;
-            margin-right: auto;
-            width: 80%;
-            background-color: white;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+        .text-area, .chart-area, .car-area {
+            flex: 1;
+            padding: 10px;
         }
-        img {
-            width: 100%;
-        }
-        #myChart {
-            width: 100%;
-        }
-        .container {
-            text-align: center;
-            padding: 10px 20px;
-        }
-        body {
-            background-color: white;
-        }
-        .row {
+
+        .text-area {
             display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            border-right: 1px solid black;
+        }
+
+        .chart-area {
+            display: flex;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
-            height: 100px;
+            border-right: 1px solid black;
+        }
+
+        .car-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: relative;
         }
-        .name {
-            width: 150px;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        .track {
-            flex-grow: 1;
-            position: relative;
-            height: 20px;
-        }
-        .line {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 2px;
-            background-color: black;
-        }
+
         .car {
             position: absolute;
             bottom: 0;
@@ -68,6 +52,26 @@
             height: 50px;
             background-size: contain;
             background-repeat: no-repeat;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            height: 100px;
+            position: relative;
+        }
+
+        .name {
+            font-weight: bold;
+        }
+
+        body {
+            background-color: white;
+        }
+
+        img {
+            width: 100%;
         }
     </style>
 </head>
@@ -87,8 +91,21 @@
         </div>
     </div>
     <br>
-    <div class="game-board" id="gameBoard">
-        <!-- As linhas com as animações dos carros serão geradas dinamicamente aqui -->
+    <div class="game-board">
+        <!-- Text Area -->
+        <div class="text-area" id="textArea">
+            <!-- Nomes serão preenchidos aqui dinamicamente -->
+        </div>
+
+        <!-- Chart Area -->
+        <div class="chart-area">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <!-- Car Area -->
+        <div class="car-area" id="carArea">
+            <!-- Carros serão posicionados aqui -->
+        </div>
     </div>
     <br>
 
@@ -97,8 +114,8 @@
 
         async function fetchData() {
             try {
-                const apiKey = 'AIzaSyDYNzZySDuG6FlDfv5XDRj6gd9eegOEa9o'; // Substitua pela sua chave da API
-                const range = 'A3:B'; // Intervalo de dados
+                const apiKey = 'AIzaSyDYNzZySDuG6FlDfv5XDRj6gd9eegOEa9o';
+                const range = 'A3:B';
                 const spreadsheetId = '16iS20GXxOqQiSIk3vmaWBYL_air1xT1zeAzIjlqyiSU';
                 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
@@ -118,10 +135,6 @@
                 const labels = entries.map(row => row[0] || '');
                 const values = entries.map(row => parseFloat(row[1]) || 0);
 
-                if (labels.length === 0 || values.length === 0) {
-                    throw new Error("Dados insuficientes para criar o gráfico.");
-                }
-
                 return { labels, values };
             } catch (error) {
                 console.error("Ocorreu um erro: " + error.message);
@@ -134,23 +147,23 @@
             if (data) {
                 const ctx = document.getElementById('myChart').getContext('2d');
                 if (chart) {
-                    chart.destroy(); // Remove o gráfico existente antes de criar um novo
+                    chart.destroy();
                 }
                 chart = new Chart(ctx, {
-                    type: 'bar', // Usar 'bar' para barras horizontais
+                    type: 'bar',
                     data: {
                         labels: data.labels,
                         datasets: [{
                             label: 'Dados do Google Sheets',
                             data: data.values,
-                            backgroundColor: 'RoyalBlue', // Cor definida para as barras
-                            borderColor: 'rgba(0, 0, 139, 1)', // Cor da borda das barras
+                            backgroundColor: 'RoyalBlue',
+                            borderColor: 'rgba(0, 0, 139, 1)',
                             borderWidth: 1
                         }]
                     },
                     options: {
                         responsive: true,
-                        indexAxis: 'y', // Adiciona essa linha para criar um gráfico de barras horizontais
+                        indexAxis: 'y',
                         plugins: {
                             legend: {
                                 display: true,
@@ -190,30 +203,25 @@
             }
         }
 
-        async function updateChart() {
+        async function updateAreas() {
             const data = await fetchData();
-            const gameBoard = document.getElementById('gameBoard');
+            const textArea = document.getElementById('textArea');
+            const carArea = document.getElementById('carArea');
 
             if (data) {
-                gameBoard.innerHTML = ''; // Limpa as linhas existentes
+                textArea.innerHTML = ''; // Limpa as linhas existentes
+                carArea.innerHTML = ''; // Limpa as imagens dos carros
 
                 data.labels.forEach((label, index) => {
                     const value = data.values[index];
 
-                    // Cria a linha da "tabela"
-                    const row = document.createElement('div');
-                    row.classList.add('row');
-
+                    // Adiciona o nome à área de texto
                     const nameDiv = document.createElement('div');
                     nameDiv.classList.add('name');
                     nameDiv.textContent = label;
+                    textArea.appendChild(nameDiv);
 
-                    const trackDiv = document.createElement('div');
-                    trackDiv.classList.add('track');
-
-                    const lineDiv = document.createElement('div');
-                    lineDiv.classList.add('line');
-
+                    // Cria a imagem do carro na área de carros
                     const carDiv = document.createElement('div');
                     carDiv.classList.add('car');
                     carDiv.style.backgroundImage = `url('img/${index % 3 === 0 ? 'jetta' : index % 3 === 1 ? 'taos' : 'amarok'}.png')`;
@@ -221,12 +229,7 @@
                     // A animação do carro é baseada no valor
                     carDiv.style.left = `${value}%`;
 
-                    trackDiv.appendChild(lineDiv);
-                    trackDiv.appendChild(carDiv);
-                    row.appendChild(nameDiv);
-                    row.appendChild(trackDiv);
-
-                    gameBoard.appendChild(row);
+                    carArea.appendChild(carDiv);
                 });
             }
         }
@@ -237,11 +240,11 @@
         // Cria o gráfico inicialmente
         createChart();
 
-        // Atualiza a tabela de animação a cada 10 segundos
-        setInterval(updateChart, 10000);
+        // Atualiza as áreas a cada 10 segundos
+        setInterval(updateAreas, 10000);
 
-        // Cria a tabela de animação inicialmente
-        updateChart();
+        // Cria as áreas inicialmente
+        updateAreas();
     </script>
 </body>
 </html>
