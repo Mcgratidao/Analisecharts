@@ -211,46 +211,52 @@
             }
         }
 
-        async function updateChart() {
-            const data = await fetchData();
-            const gameBoard = document.getElementById('gameBoard');
+   async function updateChart() {
+    const data = await fetchData();
+    const gameBoard = document.getElementById('gameBoard');
 
-            if (data) {
-                gameBoard.innerHTML = ''; // Limpa as linhas existentes
+    if (data) {
+        gameBoard.innerHTML = ''; // Limpa as linhas existentes
 
-                data.labels.forEach((label, index) => {
-                    const value = data.values[index];
+        // Encontrar o maior valor
+        const maxValue = Math.max(...data.values);
 
-                    // Cria a linha da "tabela"
-                    const row = document.createElement('div');
-                    row.classList.add('row');
+        data.labels.forEach((label, index) => {
+            const value = data.values[index];
 
-                    const nameDiv = document.createElement('div');
-                    nameDiv.classList.add('name');
-                    nameDiv.textContent = label;
+            // Calcula a porcentagem com base no maior valor
+            const percentage = (value / maxValue) * 100;
 
-                    const trackDiv = document.createElement('div');
-                    trackDiv.classList.add('track');
+            // Cria a linha da "tabela"
+            const row = document.createElement('div');
+            row.classList.add('row');
 
-                    const lineDiv = document.createElement('div');
-                    lineDiv.classList.add('line');
+            const nameDiv = document.createElement('div');
+            nameDiv.classList.add('name');
+            nameDiv.textContent = label;
 
-                    const carDiv = document.createElement('div');
-                    carDiv.classList.add('car');
-                    carDiv.style.backgroundImage = `url('img/${index % 3 === 0 ? 'jetta' : index % 3 === 1 ? 'taos' : 'amarok'}.png')`;
+            const trackDiv = document.createElement('div');
+            trackDiv.classList.add('track');
 
-                    // A animação do carro é baseada no valor
-                    carDiv.style.left = `${value}%`;
+            const lineDiv = document.createElement('div');
+            lineDiv.classList.add('line');
 
-                    trackDiv.appendChild(lineDiv);
-                    trackDiv.appendChild(carDiv);
-                    row.appendChild(nameDiv);
-                    row.appendChild(trackDiv);
+            const carDiv = document.createElement('div');
+            carDiv.classList.add('car');
+            carDiv.style.backgroundImage = `url('img/${index % 3 === 0 ? 'jetta' : index % 3 === 1 ? 'taos' : 'amarok'}.png')`;
 
-                    gameBoard.appendChild(row);
-                });
-            }
-        }
+            // A animação do carro é baseada na porcentagem calculada
+            carDiv.style.left = `${percentage}%`;
+
+            trackDiv.appendChild(lineDiv);
+            trackDiv.appendChild(carDiv);
+            row.appendChild(nameDiv);
+            row.appendChild(trackDiv);
+
+            gameBoard.appendChild(row);
+        });
+    }
+}
 
         // Atualiza o gráfico a cada 30 segundos
         setInterval(createChart, 30000);
