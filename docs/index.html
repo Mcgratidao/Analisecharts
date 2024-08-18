@@ -220,7 +220,7 @@ Meu código ficou assim
 
                     const carDiv = document.createElement('div');
                     carDiv.classList.add('car');
-                    carDiv.style.backgroundImage = `url('img/${index % 3 === 0 ? 'jetta' : index % 3 === 1 ? 'taos' : 'amarok'}.png')`;
+                    carDiv.style.backgroundImage = `url('img/${index % 3 === 0 ? 'jetta' : index % 3 === 1 ? 'Taos' : 'amarok'}.png')`;
 
                     // A animação do carro é baseada no valor
                     carDiv.style.left = `${value}%`;
@@ -249,4 +249,3 @@ Meu código ficou assim
     </script>
 </body>
 </html>
-O código ficou bom mais os elementos dentro do game-board estão saído para fora do espaço e eu queria também ajustar para que a linha seguisse a posição atrás do carro , quero que aparecesse o número de cada valor que está sendo coletado na frente do carro . Quero que o tamanho da altura se ajuste de acordo com a quantidade de itensz e que tenha a lógica de que quando a pessoa tiver de 0 a 5 ela vai ficar com o carro taos, quando estiver de 51 a 150 o Jetta e quando estiver a mais a Amarok
