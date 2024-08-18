@@ -84,8 +84,12 @@
         <img src="img/taos.png" id="taos">
         <img src="img/jetta.png" id="jetta">
         <img src="img/amarok.png" id="amarok">
+        <div id='chart'>
+
+        </div>
     </div>
     <br>
+    
     <script>
         let chart;
 
@@ -189,6 +193,19 @@
 
         // Cria o gráfico inicialmente
         createChart();
+      async function updateChart() {
+            const users = await fetchData();
+            if (users.length > 0) {
+                document.getElementById('chart').innerHTML = ''; // Limpa o gráfico
+                users.forEach(user => createUserRow(user)); // Cria as divs para cada usuário
+            }
+        }
+
+        // Inicializar gráfico com dados da planilha do Google
+        updateChart();
+
+        // Opcional: Atualizar dados a cada 10 segundos
+        setInterval(updateChart, 10000);
     </script>
 </body>
 </html>
