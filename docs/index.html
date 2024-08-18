@@ -64,6 +64,10 @@
                     throw new Error("Dados insuficientes para criar o gráfico.");
                 }
 
+                // Exibir dados em alertas
+                alert("Labels: " + labels.join(', '));
+                alert("Values: " + values.join(', '));
+
                 alert("Labels e values extraídos!");
 
                 return { labels, values };
@@ -113,9 +117,9 @@
                                     text: 'Nome'
                                 },
                                 ticks: {
-                                    autoSkip: false, // Mostrar todos os rótulos no eixo x
-                                    maxRotation: 90, // Evitar rotação excessiva dos rótulos
-                                    minRotation: 45 // Ajustar a rotação dos rótulos
+                                    autoSkip: false,
+                                    maxRotation: 90,
+                                    minRotation: 45
                                 }
                             },
                             y: {
