@@ -14,11 +14,8 @@
             background-color: white;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
-        img {width: 100%;}
-        #myChart {
-            width: 100% !important;
-            height: 400px !important;
-        }
+        img { width: 100%; }
+        #myChart { width: 100%; }
         div.container {
             text-align: center;
             padding: 10px 20px;
@@ -34,108 +31,110 @@
         </div>
     </div>
     <br><br><br>
-    <canvas id="myChart"></canvas>
+    <canvas id="myChart" width="400" height="200"></canvas>
     <script>
-async function fetchData() {
-    try {
-        const apiKey = 'AIzaSyDYNzZySDuG6FlDfv5XDRj6gd9eegOEa9o'; // Substitua pela sua chave da API
-        const range = 'A3:B8'; // Intervalo de dados
-        const spreadsheetId = '16iS20GXxOqQiSIk3vmaWBYL_air1xT1zeAzIjlqyiSU';
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+        async function fetchData() {
+            try {
+                const apiKey = 'AIzaSyDYNzZySDuG6FlDfv5XDRj6gd9eegOEa9o'; // Substitua pela sua chave da API
+                const range = 'A3:B'; // Intervalo de dados
+                const spreadsheetId = '16iS20GXxOqQiSIk3vmaWBYL_air1xT1zeAzIjlqyiSU';
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
-        alert("Iniciando a busca dos dados...");
+                alert("Iniciando a busca dos dados...");
 
-        const response = await fetch(url);
-        alert("Resposta recebida!");
+                const response = await fetch(url);
+                alert("Resposta recebida!");
 
-        if (!response.ok) {
-            throw new Error("Erro na resposta: " + response.statusText);
+                if (!response.ok) {
+                    throw new Error("Erro na resposta: " + response.statusText);
+                }
+
+                const data = await response.json();
+                alert("Dados convertidos para JSON!");
+
+                const entries = data.values;
+                if (!entries || entries.length === 0) {
+                    throw new Error("Nenhum dado encontrado.");
+                }
+
+                const labels = entries.map(row => row[0] || ''); // Garantir que não há valores nulos
+                const values = entries.map(row => parseFloat(row[1]) || 0); // Garantir que não há valores nulos
+
+                if (labels.length === 0 || values.length === 0) {
+                    throw new Error("Dados insuficientes para criar o gráfico.");
+                }
+
+                alert("Labels e values extraídos!");
+
+                return { labels, values };
+            } catch (error) {
+                alert("Ocorreu um erro: " + error.message);
+                return null;
+            }
         }
 
-        const data = await response.json();
-        alert("Dados convertidos para JSON!");
+        async function createChart() {
+            alert("Iniciando a criação do gráfico...");
 
-        const entries = data.values;
-        if (!entries || entries.length === 0) {
-            throw new Error("Nenhum dado encontrado.");
-        }
-
-        const labels = entries.map(row => row[0] || ''); // Garantir que não há valores nulos
-        const values = entries.map(row => parseFloat(row[1]) || 0); // Garantir que não há valores nulos
-
-        if (labels.length === 0 || values.length === 0) {
-            throw new Error("Dados insuficientes para criar o gráfico.");
-        }
-
-        alert("Labels e values extraídos!");
-
-        return { labels, values };
-    } catch (error) {
-        alert("Ocorreu um erro: " + error.message);
-        return null;
-    }
-}
-
-async function createChart() {
-    alert("Iniciando a criação do gráfico...");
-
-    const data = await fetchData();
-    if (data) {
-        const ctx = document.getElementById('myChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: data.labels,
-                datasets: [{
-                    label: 'Dados do Google Sheets',
-                    data: data.values,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
+            const data = await fetchData();
+            if (data) {
+                const ctx = document.getElementById('myChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Dados do Google Sheets',
+                            data: data.values,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Nome'
+                                },
+                                ticks: {
+                                    autoSkip: false, // Mostrar todos os rótulos no eixo x
+                                    maxRotation: 90, // Evitar rotação excessiva dos rótulos
+                                    minRotation: 45 // Ajustar a rotação dos rótulos
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Valor'
+                                },
+                                beginAtZero: true
                             }
                         }
                     }
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Nome'
-                        },
-                        ticks: {
-                            autoSkip: false // Mostrar todos os rótulos no eixo x
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Valor'
-                        },
-                        beginAtZero: true
-                    }
-                }
+                });
+                alert("Gráfico criado com sucesso!");
+            } else {
+                alert("Falha ao criar o gráfico devido a dados inválidos.");
             }
-        });
-        alert("Gráfico criado com sucesso!");
-    } else {
-        alert("Falha ao criar o gráfico devido a dados inválidos.");
-    }
-}
+        }
 
-createChart();
+        createChart();
     </script>
 </body>
 </html>
