@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -52,10 +52,16 @@
                 const data = await response.json();
                 alert("Dados convertidos para JSON!");
 
+                // Exibir dados brutos em um alerta para verificação
+                alert("Dados brutos: " + JSON.stringify(data));
+
                 const entries = data.values;
                 if (!entries || entries.length === 0) {
                     throw new Error("Nenhum dado encontrado.");
                 }
+
+                // Verificar se a estrutura dos dados está correta
+                alert("Estrutura dos dados: " + JSON.stringify(entries));
 
                 const labels = entries.map(row => row[0] || ''); // Garantir que não há valores nulos
                 const values = entries.map(row => parseFloat(row[1]) || 0); // Garantir que não há valores nulos
@@ -64,11 +70,9 @@
                     throw new Error("Dados insuficientes para criar o gráfico.");
                 }
 
-                // Exibir dados em alertas
+                // Exibir dados extraídos em alertas
                 alert("Labels: " + labels.join(', '));
                 alert("Values: " + values.join(', '));
-
-                alert("Labels e values extraídos!");
 
                 return { labels, values };
             } catch (error) {
