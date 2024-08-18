@@ -69,15 +69,6 @@
             }
         }
 
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-
         async function createChart() {
             const data = await fetchData();
             if (data) {
@@ -92,8 +83,8 @@
                         datasets: [{
                             label: 'Dados do Google Sheets',
                             data: data.values,
-                            backgroundColor: data.values.map(() => getRandomColor()), // Cores aleatórias
-                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'RoyalBlue', // Cor definida para as barras
+                            borderColor: 'rgba(0, 0, 139, 1)', // Cor da borda das barras
                             borderWidth: 1
                         }]
                     },
