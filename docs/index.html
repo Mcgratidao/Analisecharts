@@ -42,17 +42,13 @@
                 const spreadsheetId = '16iS20GXxOqQiSIk3vmaWBYL_air1xT1zeAzIjlqyiSU';
                 const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
-                alert("Iniciando a busca dos dados...");
-
                 const response = await fetch(url);
-                alert("Resposta recebida!");
 
                 if (!response.ok) {
                     throw new Error("Erro na resposta: " + response.statusText);
                 }
 
                 const data = await response.json();
-                alert("Dados convertidos para JSON!");
 
                 const entries = data.values;
                 if (!entries || entries.length === 0) {
@@ -68,14 +64,21 @@
 
                 return { labels, values };
             } catch (error) {
-                alert("Ocorreu um erro: " + error.message);
+                console.error("Ocorreu um erro: " + error.message);
                 return null;
             }
         }
 
-        async function createChart() {
-            alert("Iniciando a criação do gráfico...");
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
 
+        async function createChart() {
             const data = await fetchData();
             if (data) {
                 const ctx = document.getElementById('myChart').getContext('2d');
@@ -89,7 +92,7 @@
                         datasets: [{
                             label: 'Dados do Google Sheets',
                             data: data.values,
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            backgroundColor: data.values.map(() => getRandomColor()), // Cores aleatórias
                             borderColor: 'rgba(75, 192, 192, 1)',
                             borderWidth: 1
                         }]
@@ -131,9 +134,8 @@
                         }
                     }
                 });
-                alert("Gráfico criado com sucesso!");
             } else {
-                alert("Falha ao criar o gráfico devido a dados inválidos.");
+                console.error("Falha ao criar o gráfico devido a dados inválidos.");
             }
         }
 
