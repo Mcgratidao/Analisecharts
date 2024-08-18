@@ -1,4 +1,4 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,6 +33,8 @@
     <br><br><br>
     <canvas id="myChart" width="400" height="200"></canvas>
     <script>
+        let chart;
+
         async function fetchData() {
             try {
                 const apiKey = 'AIzaSyDYNzZySDuG6FlDfv5XDRj6gd9eegOEa9o'; // Substitua pela sua chave da API
@@ -52,27 +54,17 @@
                 const data = await response.json();
                 alert("Dados convertidos para JSON!");
 
-                // Exibir dados brutos em um alerta para verificação
-                alert("Dados brutos: " + JSON.stringify(data));
-
                 const entries = data.values;
                 if (!entries || entries.length === 0) {
                     throw new Error("Nenhum dado encontrado.");
                 }
 
-                // Verificar se a estrutura dos dados está correta
-                alert("Estrutura dos dados: " + JSON.stringify(entries));
-
-                const labels = entries.map(row => row[0] || ''); // Garantir que não há valores nulos
-                const values = entries.map(row => parseFloat(row[1]) || 0); // Garantir que não há valores nulos
+                const labels = entries.map(row => row[0] || '');
+                const values = entries.map(row => parseFloat(row[1]) || 0);
 
                 if (labels.length === 0 || values.length === 0) {
                     throw new Error("Dados insuficientes para criar o gráfico.");
                 }
-
-                // Exibir dados extraídos em alertas
-                alert("Labels: " + labels.join(', '));
-                alert("Values: " + values.join(', '));
 
                 return { labels, values };
             } catch (error) {
@@ -87,8 +79,11 @@
             const data = await fetchData();
             if (data) {
                 const ctx = document.getElementById('myChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
+                if (chart) {
+                    chart.destroy(); // Remove o gráfico existente antes de criar um novo
+                }
+                chart = new Chart(ctx, {
+                    type: 'bar', // Usar 'bar' para barras horizontais
                     data: {
                         labels: data.labels,
                         datasets: [{
@@ -101,6 +96,7 @@
                     },
                     options: {
                         responsive: true,
+                        indexAxis: 'y', // Adiciona essa linha para criar um gráfico de barras horizontais
                         plugins: {
                             legend: {
                                 display: true,
@@ -118,20 +114,18 @@
                             x: {
                                 title: {
                                     display: true,
-                                    text: 'Nome'
-                                },
-                                ticks: {
-                                    autoSkip: false,
-                                    maxRotation: 90,
-                                    minRotation: 45
+                                    text: 'Valor'
                                 }
                             },
                             y: {
                                 title: {
                                     display: true,
-                                    text: 'Valor'
+                                    text: 'Nome'
                                 },
-                                beginAtZero: true
+                                ticks: {
+                                    autoSkip: false,
+                                    maxRotation: 0
+                                }
                             }
                         }
                     }
@@ -142,6 +136,10 @@
             }
         }
 
+        // Atualiza o gráfico a cada 30 segundos
+        setInterval(createChart, 30000);
+
+        // Cria o gráfico inicialmente
         createChart();
     </script>
 </body>
