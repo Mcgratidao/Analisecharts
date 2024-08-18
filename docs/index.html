@@ -36,55 +36,63 @@
     <br><br><br>
     <canvas id="myChart"></canvas>
     <script>
-        async function fetchData() {
-    const response = await fetch('https://spreadsheets.google.com/feeds/list/16iS20GXxOqQiSIk3vmaWBYL_air1xT1zeAzIjlqyiSU/1416026108/public/values?alt=json');
-    const data = await response.json();
-    const entries = data.feed.entry;
+async function fetchData() {
+    try {
+        alert("Iniciando a busca dos dados...");
 
-    // Escrever os dados recebidos na página
-    document.write("<pre>" + JSON.stringify(entries, null, 2) + "</pre>");
+        const response = await fetch('https://spreadsheets.google.com/feeds/list/16iS20GXxOqQiSIk3vmaWBYL_air1xT1zeAzIjlqyiSU/1416026108/public/values?alt=json');
+        alert("Resposta recebida!");
 
-    const labels = entries.map(entry => entry.gsx$nome.$t);
-    const values = entries.map(entry => parseFloat(entry.gsx$valor.$t));
+        const data = await response.json();
+        alert("Dados convertidos para JSON!");
 
-    // Escrever labels e values na página
-    document.write("<p>Labels: " + labels.join(", ") + "</p>");
-    document.write("<p>Values: " + values.join(", ") + "</p>");
+        const entries = data.feed.entry;
+        alert("Dados processados!");
 
-    return { labels, values };
+        const labels = entries.map(entry => entry.gsx$nome.$t);
+        const values = entries.map(entry => parseFloat(entry.gsx$valor.$t));
+
+        alert("Labels e values extraídos!");
+
+        return { labels, values };
+    } catch (error) {
+        alert("Ocorreu um erro: " + error.message);
+    }
 }
 
-        async function createChart() {
+async function createChart() {
     alert("Iniciando a criação do gráfico...");
 
     const data = await fetchData();
-    alert("Dados carregados com sucesso!");
-
-    const ctx = document.getElementById('myChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: data.labels,
-            datasets: [{
-                label: 'Dados do Google Sheets',
-                data: data.values,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+    if (data) {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Dados do Google Sheets',
+                    data: data.values,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
-
-    alert("Gráfico criado com sucesso!");
+        });
+        alert("Gráfico criado com sucesso!");
+    } else {
+        alert("Falha ao criar o gráfico devido a dados inválidos.");
+    }
 }
-        createChart();
+
+createChart();
     </script>
 </body>
 </html>
