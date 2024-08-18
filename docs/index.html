@@ -8,32 +8,52 @@
     <style>
         .game-board {
             width: 80%;
-            height: 800px;
             border: 1px solid rgb(35, 100, 35);
             margin: 0 auto;
             position: relative;
-            overflow: hidden;
             background: linear-gradient(#0f3b29, #E0F6FF);
-         }
-
+        }
+        .polaroid-cont, .polaroid {
+            position: relative;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 0px;
+            padding-bottom: 20px;
+            padding-hight: 20px;
+            width: 80%;
+            background-color: white;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+        img { 
+            width: 100%; 
+        }
+        #myChart { 
+            width: 100%; 
+        }
+        .container {
+            text-align: center;
+            padding: 10px 20px;
+        }
+        body {
+            background-color: white;
+        }
         .row {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+            height: 100px;
+            position: relative;
         }
-
         .name {
             width: 150px;
             font-weight: bold;
             margin-right: 10px;
         }
-
         .track {
-            position: relative;
             flex-grow: 1;
+            position: relative;
             height: 20px;
         }
-
         .line {
             position: absolute;
             bottom: 0;
@@ -41,35 +61,14 @@
             height: 2px;
             background-color: black;
         }
-
         .car {
             position: absolute;
             bottom: 0;
             width: 50px;
-            height: 20px;
+            height: 50px;
             background-size: contain;
             background-repeat: no-repeat;
             left: 0;
-        }
-
-        body {
-            background-color: white;
-        }
-
-        #jetta {
-            bottom: 150px;
-            width: 90px;
-            position: absolute;
-        }
-        #taos {
-            position: absolute;
-            bottom: 60px;
-            width: 90px;
-        }
-        #amarok {
-            position: absolute;
-            bottom: 20px;
-            width: 90px;
         }
     </style>
 </head>
@@ -82,15 +81,15 @@
         </div>
     </div>
     <br>
-   <div class="polaroid">
-    <canvas id="myChart" width="400" height="200"></canvas>
+    <div class="polaroid">
+        <canvas id="myChart" width="400" height="200"></canvas>
         <div class="container">
-        <p>AGENDAMENTOS</p>
+            <p>AGENDAMENTOS</p>
         </div>
     </div>
     <br>
     <div class="game-board" id="gameBoard">
-        <!-- As linhas serão geradas dinamicamente aqui -->
+        <!-- As linhas com as animações dos carros serão geradas dinamicamente aqui -->
     </div>
     <br>
 
@@ -221,17 +220,7 @@
                     carDiv.style.backgroundImage = `url('img/car${index % 3 + 1}.png')`;
 
                     // A animação do carro é baseada no valor
-                    carDiv.style.animation = `moveCar${index} 5s linear forwards`;
-
-                    // Cria a animação personalizada para cada carro
-                    const animationStyle = document.createElement('style');
-                    animationStyle.innerHTML = `
-                        @keyframes moveCar${index} {
-                            from { left: 0; }
-                            to { left: calc(${value}% - 50px); }
-                        }
-                    `;
-                    document.head.appendChild(animationStyle);
+                    carDiv.style.left = `${value}%`;
 
                     trackDiv.appendChild(lineDiv);
                     trackDiv.appendChild(carDiv);
