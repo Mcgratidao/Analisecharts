@@ -216,6 +216,21 @@
                 console.error("Falha ao criar o gráfico devido a dados inválidos.");
             }
         }
+  function getCarForValue(value) {
+    if (value === 0) {
+        return ''; // Sem carro
+    } else if (value > 0 && value <= 49) {
+        return 'jetta';
+    } else if (value >= 50 && value <= 150) {
+        return 'taos';
+    } else {
+        return 'amarok';
+    }
+}
+  function calculatePercentage(value, maxValue) {
+    const adjustedMax = maxValue + maxValue / 4; // Max + 1/4 de Max
+    return (value / adjustedMax) * 100;
+}
 
    async function updateChart() {
     const data = await fetchData();
