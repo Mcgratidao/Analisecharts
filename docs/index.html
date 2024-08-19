@@ -228,7 +228,7 @@
     }
 }
   function calculatePercentage(value, maxValue) {
-    const adjustedMax = maxValue + maxValue / 4; // Max + 1/4 de Max
+    const adjustedMax = maxValue + maxValue / 3; // Max + 1/4 de Max
     return (value / adjustedMax) * 100;
 }
 
@@ -282,7 +282,7 @@
 
         // Ajusta a altura da game-board com base na quantidade de itens
         const rowCount = data.labels.length;
-        gameBoard.style.height = `${rowCount * 140}px`;
+        gameBoard.style.height = `${rowCount * 120}px`;
     }
 }
         // Atualiza o gráfico a cada 30 segundos
