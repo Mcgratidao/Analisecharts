@@ -227,8 +227,11 @@
         data.labels.forEach((label, index) => {
             const value = data.values[index];
 
-            // Calcula a porcentagem com base no maior valor
-            const percentage = (value / maxValue) * 100;
+            // Calcula a porcentagem ajustada com base no valor máximo + 1/4 do máximo
+            const percentage = calculatePercentage(value, maxValue);
+
+            // Define qual carro deve ser exibido
+            const carType = getCarForValue(value);
 
             // Cria a linha da "tabela"
             const row = document.createElement('div');
@@ -244,23 +247,26 @@
             const lineDiv = document.createElement('div');
             lineDiv.classList.add('line');
 
-            const carDiv = document.createElement('div');
-            carDiv.classList.add('car');
-            carDiv.style.backgroundImage = `url('img/${index % 3 === 0 ? 'jetta' : index % 3 === 1 ? 'taos' : 'amarok'}.png')`;
-
-            // A animação do carro é baseada na porcentagem calculada
-            carDiv.style.left = `${percentage}%`;
+            if (carType) {
+                const carDiv = document.createElement('div');
+                carDiv.classList.add('car');
+                carDiv.style.backgroundImage = `url('img/${carType}.png')`;
+                carDiv.style.left = `${percentage}%`;
+                trackDiv.appendChild(carDiv);
+            }
 
             trackDiv.appendChild(lineDiv);
-            trackDiv.appendChild(carDiv);
             row.appendChild(nameDiv);
             row.appendChild(trackDiv);
 
             gameBoard.appendChild(row);
         });
+
+        // Ajusta a altura da game-board com base na quantidade de itens
+        const rowCount = data.labels.length;
+        gameBoard.style.height = `${rowCount * 100}px`;
     }
 }
-
         // Atualiza o gráfico a cada 30 segundos
         setInterval(createChart, 30000);
 
