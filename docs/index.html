@@ -42,6 +42,7 @@
         img {
             width: 100%;
         }
+
         #myChart {
             padding-bottom: 20px;
             padding-hight: 20px;
@@ -57,7 +58,13 @@
         body {
             background-color: white;
         }
-        .row {
+        .value {
+            color: black; /* Cor do texto */
+            font-weight: bold;
+            font-size: 14px;
+            transform: translateX(-50%); /* Centraliza o valor */
+         }
+         .row {
             width: 80%;
             padding-top: 25px;
             padding-bottom: 20px;
@@ -273,7 +280,17 @@
                 carDiv.classList.add('car');
                 carDiv.style.backgroundImage = `url('img/${carType}.png')`;
                 carDiv.style.left = `${percentage}%`;
+
+                // Cria o elemento para o número
+                const valueDiv = document.createElement('div');
+                valueDiv.classList.add('value');
+                valueDiv.textContent = value;
+                valueDiv.style.position = 'absolute';
+                valueDiv.style.left = `${percentage + 5}%`; // Ajuste o "+ 5" para alterar a distância à frente do carro
+                valueDiv.style.bottom = '10px'; // Ajuste a posição vertical conforme necessário
+
                 trackDiv.appendChild(carDiv);
+                trackDiv.appendChild(valueDiv); // Adiciona o número ao trackDiv
             }
 
             trackDiv.appendChild(lineDiv);
@@ -288,6 +305,7 @@
         gameBoard.style.height = `${rowCount * 110}px`;
     }
 }
+
         // Atualiza o gráfico a cada 30 segundos
         setInterval(createChart, 30000);
 
