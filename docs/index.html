@@ -307,15 +307,7 @@
                 valueDiv.style.left = `${percentage + 15}%`; // Ajuste o "+ 5" para alterar a distância à frente do carro
                 valueDiv.style.bottom = '10px'; // Ajuste a posição vertical conforme necessário
 
-                trackDiv.appendChild(carDiv);
-                // Suponha que `valueDiv` contenha o número que você deseja adicionar ao `trackDiv`
-                var content = valueDiv.textContent || valueDiv.innerText; // Obtém o conteúdo do div
-
-                // Verifica se o conteúdo é um número
-           if (!isNaN(content)) {
-                 valueDiv.style.color = 'white'; // Define a cor do texto como branco
-}
-
+              trackDiv.appendChild(carDiv);
               trackDiv.appendChild(valueDiv); // Adiciona o número ao trackDiv
             }
 
