@@ -13,7 +13,8 @@
             margin: 0 auto;
             position: relative;
             overflow: hidden;
-            background: linear-gradient(#033582, #E0F6FF);
+         <!--   background:  linear-gradient(#033582, #E0F6FF); -->
+            background-color: black;
         }
 
         div.polaroid-cont {
@@ -59,7 +60,8 @@
         }
 
         body {
-            background-color: blue;
+           <!-- background-color: blue; -->
+            background: linear-gradient(#033582, #E0F6FF);
         }
 
         .value {
@@ -85,7 +87,7 @@
          }
 
         .name {
-            color: black;
+            color: white;
             width: 100px;
            /* font-weight: bold;*/
             padding-right: 8px;
@@ -100,7 +102,8 @@
             height: 20px;
         }
 
-        .line {
+        .line  {
+           color: white;
             position: absolute;
             bottom: 0px;
             width: 100%;
@@ -305,6 +308,7 @@
                 valueDiv.style.bottom = '10px'; // Ajuste a posição vertical conforme necessário
 
                 trackDiv.appendChild(carDiv);
+                valueDiv.style.color = 'white'; // Define a cor do texto como branco
                 trackDiv.appendChild(valueDiv); // Adiciona o número ao trackDiv
             }
 
